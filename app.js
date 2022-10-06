@@ -36,6 +36,33 @@ let allSizes = [
   },
 ];
 
+const rolls = {
+  Original: {
+    basePrice: 2.49,
+    imageFile: "original-cinnamon-roll.jpg",
+  },
+  Apple: {
+    basePrice: 3.49,
+    imageFile: "apple-cinnamon-roll.jpg",
+  },
+  Raisin: {
+    basePrice: 2.99,
+    imageFile: "raisin-cinnamon-roll.jpg",
+  },
+  Walnut: {
+    basePrice: 3.49,
+    imageFile: "walnut-cinnamon-roll.jpg",
+  },
+  "Double-Chocolate": {
+    basePrice: 3.99,
+    imageFile: "double-chocolate-cinnamon-roll.jpg",
+  },
+  Strawberry: {
+    basePrice: 3.99,
+    imageFile: "strawberry-cinnamon-roll.jpg",
+  },
+};
+
 /**
  * Updates the UI to display a particular car's info.
  * @param roll A car object containing a model and a description.
@@ -43,11 +70,10 @@ let allSizes = [
 
 let price = 0;
 let amount = 1;
+let rollGlazing = document.querySelector("#glazing");
+let rollAmount = document.querySelector("#packSize");
 
 function displayPrice() {
-  let rollGlazing = document.querySelector("#glazing");
-  let rollAmount = document.querySelector("#packSize");
-
   totalPrice.innerText = "$" + ((2.49 + price) * amount).toFixed(2);
 }
 
@@ -87,37 +113,38 @@ function onSelectValueChangeAmount() {
   displayPrice();
 }
 
+let cart = [];
+const queryString = window.location.search;
+const params = new URLSearchParams(queryString);
+const rollType = params.get("roll");
+let rollBasePrice = rolls[rollType].basePrice;
+
+function updateDetail() {
+  let detailItemName = (document.querySelector("#detail-item-name").innerHTML =
+    rollType + "Cinnamon Roll");
+  let detailItemImage = (document.querySelector("#detail-item-image").src =
+    "assets/" + rollType + "-cinnamon-roll.jpg");
+}
+
+class Roll {
+  constructor(rollType, rollGlazing, amount, rollBasePrice) {
+    this.type = rollType;
+    this.galzing = rollGlazing;
+    this.size = amount;
+    this.basePrice = rollBasePrice;
+  }
+}
+
+function addToCart() {
+  let newRoll = new Roll(rollType, rollGlazing, amount, rollBasePrice);
+
+  console.log(newRoll);
+}
+
 let selectElementGlazing = document.querySelector("#glazing");
 let selectElementAmount = document.querySelector("#packSize");
 
 selectElementGlazing.addEventListener("change", onSelectValueChangeGlazing);
 selectElementAmount.addEventListener("change", onSelectValueChangeAmount);
 
-/*
-// When the page loads, find the select element.
-let selectElement = document.querySelector("#car-select");
-
-// Let's add a new car to the allCars array.
-let newCar = {
-  model: "Honda Odyssey",
-  description: "A practical minivan for soccer moms and everyone else.",
-};
-allCars.push(newCar);
-
-// We also need to add this new car to the UI. To do that, create a new
-// 'option' HTML element, set its attributes, and add it to the select
-// element.
-var option = document.createElement("option");
-option.text = newCar.model;
-option.value = allCars.length - 1; // Its value should be the index of the last element in allCars
-selectElement.add(option);
-
-// Give it a listener for the 'change' event, which is a function that will run
-// when the selected option changes. You could also do this by setting the
-// onchange property of selectElement, e.g. selectElement.onchange = ...
-selectElement.addEventListener("change", onSelectValueChange);
-
-// Initially, display the first car
-displayCar(allCars[0]);
-
-*/
+updateDetail();
